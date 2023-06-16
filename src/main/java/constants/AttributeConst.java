@@ -3,15 +3,15 @@ package constants;
 public enum AttributeConst {
 
     FLUSH("flush"),
-    
+
     MAX_ROW("maxRow"),
     PAGE("page"),
-    
+
     TOKEN("_token"),
     ERR("errors"),
-    
+
     LOGIN_ERR("loginError"),
-    
+
     EMPLOYEE("employee"),
     EMPLOYEES("employees"),
     EMP_COUNT("employees_count"),
