@@ -92,7 +92,8 @@ public class ReportAction extends ActionBase {
                     getRequestParam(AttributeConst.REP_TITLE),
                     getRequestParam(AttributeConst.REP_CONTENT),
                     null,
-                    null);
+                    null,
+                    0);
 
 
             List<String> errors = service.create(rv);
@@ -193,6 +194,33 @@ public class ReportAction extends ActionBase {
             }
         }
     }
+
+    public void favorite() throws ServletException, IOException{
+
+        //idを条件に日報データを取得する
+        ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+
+
+        Integer count = rv.getFavorite();
+
+        if(count == null) {
+            count = 0;
+        }
+
+        count++;
+
+        rv.setFavorite(count);
+
+        //日報データ更新
+        List<String>  updates = service.update(rv);
+
+
+      //一覧画面にリダイレクト
+        redirect(ForwardConst.ACT_REP, ForwardConst.CMD_INDEX);
+
+    }
+
+
 
 
 }

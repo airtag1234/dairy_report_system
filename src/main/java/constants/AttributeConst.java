@@ -37,6 +37,7 @@ public enum AttributeConst {
     REP_DATE("report_date"),
     REP_TITLE("title"),
     REP_CONTENT("content_msg"),
+    REP_FAVORITE("favorite"),
     LOGIN_EMP("login_employee");
 
     private final String text;
