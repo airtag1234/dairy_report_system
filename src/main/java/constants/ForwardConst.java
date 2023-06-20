@@ -20,6 +20,8 @@ public enum ForwardConst {
     CMD_EDIT("edit"),
     CMD_UPDATE("update"),
     CMD_DESTROY("destroy"),
+    CMD_FAVORITE("favorite"),
+
 
     FW_ERR_UNKNOWN("error/unknown"),
     FW_TOP_INDEX("topPage/index"),
@@ -34,12 +36,20 @@ public enum ForwardConst {
     FW_REP_EDIT("reports/edit");
 
     private final String text;
+    private final Integer count;
 
     private ForwardConst(final String text) {
         this.text = text;
+        this.count = null;
     }
 
     public String getValue() {
         return this.text;
     }
+
+    public Integer getIntegerValue() {
+        return this.count;
+    }
+
+
 }

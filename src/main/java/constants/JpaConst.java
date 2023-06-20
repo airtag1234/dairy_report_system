@@ -39,10 +39,13 @@ public interface JpaConst {
     String REP_COL_CONTENT = "content"; //日報の内容
     String REP_COL_CREATED_AT = "created_at"; //登録日時
     String REP_COL_UPDATED_AT = "updated_at"; //更新日時
+    String REP_COL_FAVORITE = "favorite"; //いいね
+
 
     //Entity名
     String ENTITY_EMP = "employee"; //従業員
     String ENTITY_REP = "report"; //日報
+
 
     //JPQL内パラメータ
     String JPQL_PARM_CODE = "code"; //社員番号
