@@ -7,7 +7,7 @@
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
-<c:set var="commFAVORITE" value="${ForwardConst.CMD_FAVORITE.getValue()}" />
+<c:set var="commFavorite" value="${ForwardConst.CMD_FAVORITE.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">

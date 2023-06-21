@@ -201,18 +201,12 @@ public class ReportAction extends ActionBase {
         ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
 
 
-        Integer count = rv.getFavorite();
 
-        if(count == null) {
-            count = 0;
-        }
 
-        count++;
-
-        rv.setFavorite(count);
+        rv.setFavorite(rv.getFavorite() +1);
 
         //日報データ更新
-        List<String>  updates = service.update(rv);
+        service.update(rv);
 
 
       //一覧画面にリダイレクト
