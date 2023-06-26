@@ -12,23 +12,26 @@ import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
+import services.FavoriteService;
 import services.ReportService;
 
 
 public class ReportAction extends ActionBase {
 
-    private ReportService service;
+    private ReportService reportService;
+    private FavoriteService favoriteService;
 
 
     @Override
     public void process() throws ServletException, IOException {
 
-        service = new ReportService();
-
+        reportService = new ReportService();
+        favoriteService = new FavoriteService();
 
         invoke();
-        service.close();
-    }
+        reportService.close();
+        favoriteService.close();
+        }
 
     public void entryNew() throws ServletException, IOException{
 
@@ -45,16 +48,21 @@ public class ReportAction extends ActionBase {
     public void index() throws ServletException, IOException {
 
 
+
         int page = getPage();
-        List<ReportView> reports = service.getAllPerPage(page);
+        List<ReportView> reports = reportService.getAllPerPage(page);
 
 
-        long reportsCount = service.countAll();
+        long reportsCount = reportService.countAll();
+
+        List<Long> favorites = favoriteService.getAllCountFavoriteToReport(reports);
+
 
         putRequestScope(AttributeConst.REPORTS, reports);
         putRequestScope(AttributeConst.REP_COUNT, reportsCount);
         putRequestScope(AttributeConst.PAGE, page);
         putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE);
+        putRequestScope(AttributeConst.FAVORITES,favorites);
 
 
         String flush = getSessionScope(AttributeConst.FLUSH);
@@ -92,11 +100,10 @@ public class ReportAction extends ActionBase {
                     getRequestParam(AttributeConst.REP_TITLE),
                     getRequestParam(AttributeConst.REP_CONTENT),
                     null,
-                    null,
-                    0);
+                    null);
 
 
-            List<String> errors = service.create(rv);
+            List<String> errors = reportService.create(rv);
 
             if (errors.size() > 0) {
 
@@ -121,7 +128,9 @@ public class ReportAction extends ActionBase {
     public void show() throws ServletException, IOException {
 
 
-        ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+        ReportView rv = reportService.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+
+        EmployeeView ev = getSessionScope(AttributeConst.LOGIN_EMP);
 
         if (rv == null) {
 
@@ -131,6 +140,16 @@ public class ReportAction extends ActionBase {
 
             putRequestScope(AttributeConst.REPORT, rv);
 
+            if(favoriteService.countCreatedMineFavoriteDataToReport(rv, ev) != 1) {
+                favoriteService.create(rv, ev);
+            }
+            long favoriteCount = favoriteService.countAllFavoriteToReport(rv);
+            long myFavoriteCount = favoriteService.countMineFavoriteToReport(rv, ev);
+
+            putRequestScope(AttributeConst.TOKEN,getTokenId());
+            putRequestScope(AttributeConst.FAV_FAVORITE_COUNT,favoriteCount);                         //日報についたリアクション数
+            putRequestScope(AttributeConst.FAV_MY_FAVORITE_COUNT,myFavoriteCount);                    //自分が日報につけたリアクションの数
+
 
             forward(ForwardConst.FW_REP_SHOW);
         }
@@ -139,7 +158,7 @@ public class ReportAction extends ActionBase {
     public void edit() throws ServletException, IOException {
 
 
-        ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+        ReportView rv = reportService.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
 
 
         EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
@@ -165,7 +184,7 @@ public class ReportAction extends ActionBase {
         if (checkToken()) {
 
 
-            ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+            ReportView rv = reportService.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
 
 
             rv.setReportDate(toLocalDate(getRequestParam(AttributeConst.REP_DATE)));
@@ -173,7 +192,7 @@ public class ReportAction extends ActionBase {
             rv.setContent(getRequestParam(AttributeConst.REP_CONTENT));
 
 
-            List<String> errors = service.update(rv);
+            List<String> errors = reportService.update(rv);
 
             if (errors.size() > 0) {
 
@@ -195,26 +214,40 @@ public class ReportAction extends ActionBase {
         }
     }
 
-    public void favorite() throws ServletException, IOException{
+    public void doFavorite() throws ServletException,IOException{
 
-        //idを条件に日報データを取得する
-        ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+        //CSRF対策
+        if(checkToken()) {
+            int id = Integer.parseInt(getRequestParam(AttributeConst.REP_ID));
+            ReportView rv = reportService.findOne(id);
+            EmployeeView ev = getSessionScope(AttributeConst.LOGIN_EMP);
+            //リアクションを行い、完了した場合フラッシュメッセージを設定
+            if(favoriteService.doFavorite(rv, ev)) {
+                putRequestScope(AttributeConst.FLUSH,MessageConst.I_ADD_FAVORITE.getMessage());
+            }
 
-
-
-
-        rv.setFavorite(rv.getFavorite() +1);
-
-        //日報データ更新
-        service.update(rv);
-
-
-      //一覧画面にリダイレクト
-        redirect(ForwardConst.ACT_REP, ForwardConst.CMD_INDEX);
-
+            //詳細画面の呼び出し処理
+            show();
+        }
     }
 
 
+    public void deleteFavorite() throws ServletException,IOException{
+
+        //CSRF対策
+        if(checkToken()) {
+            int id = Integer.parseInt(getRequestParam(AttributeConst.REP_ID));
+            ReportView rv = reportService.findOne(id);
+            EmployeeView ev = getSessionScope(AttributeConst.LOGIN_EMP);
+            //リアクションを取り消し、完了した場合フラッシュメッセージを設定
+            if(favoriteService.deleteFavorite(rv, ev)) {
+                putRequestScope(AttributeConst.FLUSH,MessageConst.I_SUB_FAVORITE.getMessage());
+            }
+
+            //詳細画面の呼び出し処理
+            show();
+        }
+    }
 
 
 }

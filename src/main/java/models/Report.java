@@ -77,8 +77,5 @@ public class Report {
     @Column(name = JpaConst.REP_COL_UPDATED_AT, nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = JpaConst.REP_COL_FAVORITE, nullable = true)
-    private Integer favorite;
-
 
 }

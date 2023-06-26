@@ -37,7 +37,16 @@
                         <td class="report_date"><fmt:formatDate value='${reportDay}' pattern='yyyy-MM-dd' /></td>
                         <td class="report_title">${report.title}</td>
                         <td class="report_action"><a href="<c:url value='?action=${actRep}&command=${commShow}&id=${report.id}' />">詳細を見る</a></td>
-                        <td class="report_favorite">${report.favorite}</td>
+                        <td class = "report_favorite">
+                            <c:choose>
+                                <c:when test="${favorites[status.index] == 0}">
+                                    <c:out value=" " />
+                                </c:when>
+                                <c:otherwise>
+                                    <c:out value="${favorites[status.index]}件" />
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                     </tr>
                 </c:forEach>
             </tbody>

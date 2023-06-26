@@ -7,10 +7,16 @@
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
-<c:set var="commFavorite" value="${ForwardConst.CMD_FAVORITE.getValue()}" />
+<c:set var="commDoFav" value="${ForwardConst.CMD_DO_FAVORITE.getValue()}" />
+<c:set var="commDelFav" value="${ForwardConst.CMD_DELETE_FAVORITE.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
+    <c:if test="${flush != null}">
+            <div id="flush_success">
+                <c:out value="${flush}" />
+            </div>
+        </c:if>
 
         <h2>日報 詳細ページ</h2>
 
@@ -40,16 +46,11 @@
                     <td><fmt:formatDate value="${updateDay}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                 </tr>
 
-                 <tr>
-                    <th>いいね！</th>
-                     <td>
-                         <form method="POST" action="<c:url value='?action=${actRep}&command=${commFavorite}' />">
-                           <input type="hidden" name="${AttributeConst.REP_ID.getValue()}" value="${report.id}" />
-                           <input type="hidden" name="${AttributeConst.TOKEN.getValue()}" value="${_token}" />
-                           <input type="submit" value="いいね！" />
-                           <c:out value="${report.favorite}" />
-                         </form>
-                    </td>
+                <tr>
+                    <c:if test="${favoriteCount > 0}">
+                        <th>「いいね」の数</th>
+                        <td>${favoriteCount}件</td>
+                    </c:if>
                 </tr>
             </tbody>
         </table>
@@ -59,6 +60,22 @@
                 <a href="<c:url value='?action=${actRep}&command=${commEdt}&id=${report.id}' />">この日報を編集する</a>
             </p>
         </c:if>
+
+         <br>
+        <c:choose>
+            <c:when test="${myFavoriteCount != 1}">
+                <form method="POST" action="<c:url value='?action=${actRep}&command=${commDoFav}&id=${report.id}' />">
+                    <input type="hidden" name="${AttributeConst.TOKEN.getValue()}" value="${_token}" />
+                    <button type="submit">いいね</button>
+                </form>
+            </c:when>
+            <c:otherwise>
+                <form method="POST" action="<c:url value='?action=${actRep}&command=${commDelFav}&id=${report.id}' />">
+                    <input type="hidden" name="${AttributeConst.TOKEN.getValue()}" value="${_token}" />
+                    <button type="submit">いいねを取り消す</button>
+                </form>
+            </c:otherwise>
+        </c:choose>
 
 
         <p>
