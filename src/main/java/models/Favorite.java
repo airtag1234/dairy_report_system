@@ -1,7 +1,5 @@
 package models;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -64,14 +62,7 @@ public class Favorite {
     private Employee employee;
 
 
-//     日報に「いいね」したか
-
-    @Column(name = JpaConst.FAV_COL_FAVORITE_FLAG,nullable = false,columnDefinition = "integer default 0")
-    private Integer favoriteFlag;
 
 
-//     お気に入りした日時
 
-    @Column(name = JpaConst.FAV_COL_FAVORITE_AT,nullable = false)
-    private LocalDateTime favoriteAt;
 }

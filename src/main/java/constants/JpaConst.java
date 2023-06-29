@@ -22,7 +22,7 @@ public interface JpaConst {
     String EMP_COL_ADMIN_FLAG = "admin_flag"; //管理者権限
     String EMP_COL_CREATED_AT = "created_at"; //登録日時
     String EMP_COL_UPDATED_AT = "updated_at"; //更新日時
-    String EMP_COL_DELETE_FLAG = "delete_flag"; //削除フラグ
+
 
     int ROLE_ADMIN = 1; //管理者権限ON(管理者)
     int ROLE_GENERAL = 0; //管理者権限OFF(一般)
@@ -42,14 +42,15 @@ public interface JpaConst {
     String REP_COL_CONTENT = "content"; //日報の内容
     String REP_COL_CREATED_AT = "created_at"; //登録日時
     String REP_COL_UPDATED_AT = "updated_at"; //更新日時
+    String EMP_COL_DELETE_FLAG = "delete_flag"; //更新日時
+
 
     String TABLE_FAV = "favorites"; //テーブル名
     //お気に入りテーブルカラム
     String FAV_COL_ID = "id"; //id
     String FAV_COL_REP = "report_id"; //お気に入りをした日報
     String FAV_COL_EMP = "employee_id"; //お気に入りをした従業員
-    String FAV_COL_FAVORITE_FLAG = "favorite_flag"; //お気に入りしているかどうか
-    String FAV_COL_FAVORITE_AT = "favorite_at"; //お気に入りした時間
+
 
     //Entity名
     String ENTITY_EMP = "employee"; //従業員
@@ -90,15 +91,14 @@ public interface JpaConst {
 
   //指定した日報についたいいねの件数を取得する
     String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT = ENTITY_FAV + ".countAllFavoriteToReport";
-    String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.favoriteFlag = 1";
+    String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT ;
     //指定した日報に紐づく従業員のいいねデータの件数を取得する
     String Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT = ENTITY_FAV + ".countCreatedMineFavoriteDataToReport";
     String Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE;
     //指定した日報に従業員がつけたいいねの件数を取得する
     String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT = ENTITY_FAV + ".countMineFavoriteToReport";
-    String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.favoriteFlag = 1";
+    String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE ;
     //指定した日報に従業員がつけたいいね情報を取得する
     String Q_FAV_GET_MINE_FAVORITE_TO_REPORT = ENTITY_FAV + ".getMineFavoriteToReport";
     String Q_FAV_GET_MINE_FAVORITE_TO_REPORT_DEF = "SELECT f FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE;
 }
-

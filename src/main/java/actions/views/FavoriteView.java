@@ -1,7 +1,5 @@
 package actions.views;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,8 +24,6 @@ public class FavoriteView {
     private Employee employee;
 
 
-    private Integer favoriteFlag;
 
 
-    private LocalDateTime favoriteAt;
 }

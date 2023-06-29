@@ -140,9 +140,7 @@ public class ReportAction extends ActionBase {
 
             putRequestScope(AttributeConst.REPORT, rv);
 
-            if(favoriteService.countCreatedMineFavoriteDataToReport(rv, ev) != 1) {
-                favoriteService.create(rv, ev);
-            }
+
             long favoriteCount = favoriteService.countAllFavoriteToReport(rv);
             long myFavoriteCount = favoriteService.countMineFavoriteToReport(rv, ev);
 
@@ -221,7 +219,8 @@ public class ReportAction extends ActionBase {
             int id = Integer.parseInt(getRequestParam(AttributeConst.REP_ID));
             ReportView rv = reportService.findOne(id);
             EmployeeView ev = getSessionScope(AttributeConst.LOGIN_EMP);
-            //リアクションを行い、完了した場合フラッシュメッセージを設定
+
+            //お気に入りを行い、完了した場合フラッシュメッセージを設定
             if(favoriteService.doFavorite(rv, ev)) {
                 putRequestScope(AttributeConst.FLUSH,MessageConst.I_ADD_FAVORITE.getMessage());
             }
@@ -239,7 +238,7 @@ public class ReportAction extends ActionBase {
             int id = Integer.parseInt(getRequestParam(AttributeConst.REP_ID));
             ReportView rv = reportService.findOne(id);
             EmployeeView ev = getSessionScope(AttributeConst.LOGIN_EMP);
-            //リアクションを取り消し、完了した場合フラッシュメッセージを設定
+            //お気に入りを取り消し、完了した場合フラッシュメッセージを設定
             if(favoriteService.deleteFavorite(rv, ev)) {
                 putRequestScope(AttributeConst.FLUSH,MessageConst.I_SUB_FAVORITE.getMessage());
             }
@@ -248,6 +247,8 @@ public class ReportAction extends ActionBase {
             show();
         }
     }
+
+
 
 
 }
