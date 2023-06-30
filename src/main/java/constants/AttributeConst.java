@@ -38,6 +38,7 @@ public enum AttributeConst {
     FAV_FLAG_TRUE(1),
     FAV_FLAG_FALSE(0),
 
+
     //日報管理
     REPORT("report"),
     REPORTS("reports"),
@@ -52,7 +53,11 @@ public enum AttributeConst {
     FAVORITE("favorite"),
     FAVORITES("favorites"),
     FAV_FAVORITE_COUNT("favoriteCount"),
-    FAV_MY_FAVORITE_COUNT("myFavoriteCount");
+    FAV_MY_FAVORITE_COUNT("myFavoriteCount"),
+
+    //フォロワー管理
+    FOL_COUNT("followers_count"),
+    FOL_IS_FOLLOW("isFollow");
 
 
 

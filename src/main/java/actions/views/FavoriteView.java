@@ -24,6 +24,7 @@ public class FavoriteView {
     private Employee employee;
 
 
+    private Integer favoriteFlag;
 
 
 }

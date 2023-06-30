@@ -50,18 +50,32 @@ public interface JpaConst {
     String FAV_COL_ID = "id"; //id
     String FAV_COL_REP = "report_id"; //お気に入りをした日報
     String FAV_COL_EMP = "employee_id"; //お気に入りをした従業員
+    String FAV_COL_FAVORITE_FLAG = "favorite_flag"; //お気に入りしているかどうか
+
+    //フォローテーブル
+    String TABLE_FOL = "follows"; //テーブル名
+    //フォローテーブルカラム
+    String FOL_COL_ID = "id";                           //id
+    String FOL_COL_EMP = "employee_id";                 //フォローした従業員のid
+    String FOL_COL_FOL_EMP = "followed_employee_id";    //フォローされた従業員のid
+    String FOL_COL_CREATED_AT = "created_at";           //登録日時
+    String FOL_COL_UPDATED_AT = "updated_at";           //更新日時
 
 
     //Entity名
     String ENTITY_EMP = "employee"; //従業員
     String ENTITY_REP = "report"; //日報
     String ENTITY_FAV = "favorite"; //お気に入り
+    String ENTITY_FOL = "follow"; //フォロー
 
     //JPQL内パラメータ
     String JPQL_PARM_CODE = "code"; //社員番号
     String JPQL_PARM_PASSWORD = "password"; //パスワード
     String JPQL_PARM_EMPLOYEE = "employee"; //従業員
     String JPQL_PARM_REPORT = "report"; //日報
+//    String JPQL_PARM_ID = "employeeId";     //フォローしている従業員
+    String JPQL_PARM_FOLLOWED_EMPLOYEE = "followedEmployee"; //フォローされている従業員（オブジェクト）
+    String JPQL_PARM_REPORT_ID = "reportId";
 
     //NamedQueryの nameとquery
     //全ての従業員をidの降順に取得する
@@ -89,16 +103,55 @@ public interface JpaConst {
     String Q_REP_COUNT_ALL_MINE = ENTITY_REP + ".countAllMine";
     String Q_REP_COUNT_ALL_MINE_DEF = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :" + JPQL_PARM_EMPLOYEE;
 
-  //指定した日報についたいいねの件数を取得する
+//  //指定した日報についたいいねの件数を取得する
+//    String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT = ENTITY_FAV + ".countAllFavoriteToReport";
+//    String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT ;
+//    //指定した日報に紐づく従業員のいいねデータの件数を取得する
+//    String Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT = ENTITY_FAV + ".countCreatedMineFavoriteDataToReport";
+//    String Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE;
+//    //指定した日報に従業員がつけたいいねの件数を取得する
+//    String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT = ENTITY_FAV + ".countMineFavoriteToReport";
+//    String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE ;
+//    //指定した日報に従業員がつけたいいね情報を取得する
+//    String Q_FAV_GET_MINE_FAVORITE_TO_REPORT = ENTITY_FAV + ".getMineFavoriteToReport";
+//    String Q_FAV_GET_MINE_FAVORITE_TO_REPORT_DEF = "SELECT f FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE;
+
+    //指定した日報についたいいねの件数を取得する
     String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT = ENTITY_FAV + ".countAllFavoriteToReport";
-    String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT ;
+    String Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.favoriteFlag = 1";
     //指定した日報に紐づく従業員のいいねデータの件数を取得する
     String Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT = ENTITY_FAV + ".countCreatedMineFavoriteDataToReport";
     String Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE;
     //指定した日報に従業員がつけたいいねの件数を取得する
     String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT = ENTITY_FAV + ".countMineFavoriteToReport";
-    String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE ;
+    String Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT_DEF = "SELECT COUNT(f) FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.favoriteFlag = 1";
     //指定した日報に従業員がつけたいいね情報を取得する
     String Q_FAV_GET_MINE_FAVORITE_TO_REPORT = ENTITY_FAV + ".getMineFavoriteToReport";
     String Q_FAV_GET_MINE_FAVORITE_TO_REPORT_DEF = "SELECT f FROM Favorite As f WHERE f.report = :" + JPQL_PARM_REPORT + " AND f.employee = :" + JPQL_PARM_EMPLOYEE;
+
+    //フォロワーの件数を取得する
+    String Q_FOL_COUNT_FOLLOWEE = ENTITY_FOL + ".countFollower";
+    String Q_FOL_COUNT_FOLLOWEE_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.id = :" + JPQL_PARM_EMPLOYEE;
+    //ログイン従業員、フォロー対象従業員を条件に件数を取得する
+    String Q_FOL_COUNT_FOLLOWEE_BY_EMP = ENTITY_FOL + ".countFoloweeByEmp";
+    String Q_FOL_COUNT_FOLLOWEE_BY_EMP_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.followedEmployee = :" + JPQL_PARM_FOLLOWED_EMPLOYEE;
+    //ログイン従業員、フォロー対象従業員を条件にフォロー情報を取得する
+    String Q_FOL_MY_FOLOWEE = ENTITY_FOL + ".getById";
+    String Q_FOL_MY_FOLOWEE_DEF = "SELECT f FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.followedEmployee = :" + JPQL_PARM_FOLLOWED_EMPLOYEE;
+    //ログイン従業員のフォロー対象従業員の日報件数を取得する
+    String Q_REP_COUNT_FOLOWEE_REPORT = ENTITY_FOL + ".countFoloweeReport";
+    String Q_REP_COUNT_FOLOWEE_REPORT_DEF = "SELECT COUNT(r) FROM Report AS r, Follow AS f WHERE r.employee = f.followedEmployee AND f.employee = :" + JPQL_PARM_EMPLOYEE;
+    //ログイン従業員のフォロー対象従業員の日報データを取得する
+    String Q_REP_GET_ALL_FOLOWEE_REPORT = ENTITY_REP + ".getAllFolloweeReport";
+    String Q_REP_GET_ALL_FOLOWEE_REPORT_DEF = "SELECT r FROM Report AS r, Follow AS f WHERE r.employee = f.followedEmployee AND f.employee = :" + JPQL_PARM_EMPLOYEE + " ORDER BY r.reportDate DESC";
+  //指定した日報IDを条件に作成した従業員データを取得
+    String Q_EMP_GET_EMP_BY_REP_ID = ENTITY_EMP + ".getEmpByRepId";
+    String Q_EMP_GET_EMP_BY_REP_ID_DEF = "SELECT e FROM Employee AS e, Report AS r WHERE e.id = r.employee AND r.id = :" + JPQL_PARM_REPORT_ID;
+  //指定したログイン従業員IDを条件にフォローしている従業員データを取得
+    String Q_EMP_GET_EMP_BY_LOGIN_ID = ENTITY_EMP + ".getEmpByLoginId";
+    String Q_EMP_GET_EMP_BY_LOGIN_ID_DEF = "SELECT e FROM Employee AS e, Follow AS f WHERE e.id = f.followedEmployee AND f.employee = :" + JPQL_PARM_EMPLOYEE + " ORDER BY e.id ASC";
+    //指定したログイン従業員IDを条件にフォローしている従業員件数を取得
+    String Q_EMP_COUNT_FOLLOWEE_BY_LOGIN_ID = ENTITY_EMP + ".countFolloweeByLoginId";
+    String Q_EMP_COUNT_FOLLOWEE_BY_LOGIN_ID_DEF = "SELECT COUNT(e) FROM Employee AS e, Follow AS f WHERE e.id = f.followedEmployee AND f.employee = :" + JPQL_PARM_EMPLOYEE;
+
 }

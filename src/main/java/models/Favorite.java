@@ -62,7 +62,10 @@ public class Favorite {
     private Employee employee;
 
 
+//     日報に「いいね」したか
 
+    @Column(name = JpaConst.FAV_COL_FAVORITE_FLAG,nullable = false,columnDefinition = "integer default 0")
+    private Integer favoriteFlag;
 
 
 }

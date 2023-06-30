@@ -3,7 +3,6 @@ package services;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import actions.views.EmployeeConverter;
@@ -12,9 +11,10 @@ import actions.views.FavoriteConverter;
 import actions.views.FavoriteView;
 import actions.views.ReportConverter;
 import actions.views.ReportView;
+import constants.AttributeConst;
 import constants.JpaConst;
 import models.Favorite;
-import utils.DBUtil;
+
 
 public class FavoriteService extends ServiceBase {
 
@@ -24,22 +24,18 @@ public class FavoriteService extends ServiceBase {
      * @param ev 従業員データ
      * @return 処理が完了した場合true
      */
-    public boolean doFavorite(ReportView rv, EmployeeView ev) {
+    public boolean doFavorite(ReportView rv,EmployeeView ev) {
         try {
-            EntityManager em = DBUtil.createEntityManager();
-
-            Favorite f = em.createNamedQuery(JpaConst.Q_FAV_GET_MINE_FAVORITE_TO_REPORT, Favorite.class)
-                    .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(rv))
-                    .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(ev))
-                    .getSingleResult();
-
+            Favorite f = em.createNamedQuery(JpaConst.Q_FAV_GET_MINE_FAVORITE_TO_REPORT,Favorite.class)
+                .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(rv))
+                .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(ev))
+                .getSingleResult();
             em.getTransaction().begin();
-            em.persist(f);
+            f.setFavoriteFlag(JpaConst.FAV_REP_TRUE);
             em.getTransaction().commit();
-            em.close();
 
             return true;
-        } catch (NoResultException e) {
+        }catch(NoResultException e) {
             e.printStackTrace();
 
             return false;
@@ -52,32 +48,23 @@ public class FavoriteService extends ServiceBase {
      * @param ev 従業員データ
      * @return 処理が完了した場合true
      */
-    public boolean deleteFavorite(ReportView rv, EmployeeView ev) {
+    public boolean deleteFavorite(ReportView rv,EmployeeView ev) {
         try {
-            EntityManager em = DBUtil.createEntityManager();
-
-                        Favorite f = em.createNamedQuery(JpaConst.Q_FAV_GET_MINE_FAVORITE_TO_REPORT, Favorite.class)
-
-                                .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(rv))
-                                .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(ev))
-
-
-
-                                .getSingleResult();
-
+            Favorite f = em.createNamedQuery(JpaConst.Q_FAV_GET_MINE_FAVORITE_TO_REPORT,Favorite.class)
+                .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(rv))
+                .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(ev))
+                .getSingleResult();
             em.getTransaction().begin();
-            em.remove(f);
+            f.setFavoriteFlag(JpaConst.FAV_REP_FALSE);
             em.getTransaction().commit();
-            em.close();
 
-           return true;
-        } catch (NoResultException e) {
+            return true;
+        }catch(NoResultException e) {
             e.printStackTrace();
-        }
 
             return false;
         }
-
+    }
 
     /**
      * 指定した日報についたリアクションの件数を取得し、返却する
@@ -86,7 +73,7 @@ public class FavoriteService extends ServiceBase {
      */
     public long countAllFavoriteToReport(ReportView rv) {
 
-        long count = (long) em.createNamedQuery(JpaConst.Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT, Long.class)
+        long count = (long)em.createNamedQuery(JpaConst.Q_FAV_ALL_FAVORITE_COUNT_TO_REPORT,Long.class)
                 .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(rv))
                 .getSingleResult();
 
@@ -98,18 +85,20 @@ public class FavoriteService extends ServiceBase {
      * @param reportViewList 日報のリスト
      * @return リアクション数のリスト
      */
-    public List<Long> getAllCountFavoriteToReport(List<ReportView> reportViewList) {
+    public List<Long> getAllCountFavoriteToReport(List<ReportView> reportViewList){
         List<Long> favoriteCount = new ArrayList<Long>();
-        for (ReportView rv : reportViewList) {
+        for(ReportView rv : reportViewList){
             favoriteCount.add(countAllFavoriteToReport(rv));
         }
         return favoriteCount;
 
+
     }
 
-    public long countCreatedMineFavoriteDataToReport(ReportView rv, EmployeeView ev) {
 
-        long count = (long) em.createNamedQuery(JpaConst.Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT, Long.class)
+    public long countCreatedMineFavoriteDataToReport(ReportView rv,EmployeeView ev) {
+
+        long count = (long)em.createNamedQuery(JpaConst.Q_FAV_COUNT_CREATED_MINE_FAVORITE_DATA_TO_REPORT,Long.class)
                 .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(rv))
                 .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(ev))
                 .getSingleResult();
@@ -117,9 +106,10 @@ public class FavoriteService extends ServiceBase {
         return count;
     }
 
-    public long countMineFavoriteToReport(ReportView rv, EmployeeView ev) {
 
-        long count = (long) em.createNamedQuery(JpaConst.Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT, Long.class)
+    public long countMineFavoriteToReport(ReportView rv,EmployeeView ev) {
+
+        long count = (long)em.createNamedQuery(JpaConst.Q_FAV_COUNT_MINE_FAVORITE_TO_REPORT,Long.class)
                 .setParameter(JpaConst.JPQL_PARM_REPORT, ReportConverter.toModel(rv))
                 .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, EmployeeConverter.toModel(ev))
                 .getSingleResult();
@@ -132,15 +122,17 @@ public class FavoriteService extends ServiceBase {
      * @param rv 日報データ
      * @param ev 従業員データ
      */
-    public void create(ReportView rv, EmployeeView ev) {
-        if (countCreatedMineFavoriteDataToReport(rv, ev) == 0) {
+    public void create(ReportView rv,EmployeeView ev) {
+        if(countCreatedMineFavoriteDataToReport(rv,ev) == 0) {
             FavoriteView favoriteView = new FavoriteView(
                     null,
                     ReportConverter.toModel(rv),
-                    EmployeeConverter.toModel(ev));
+                    EmployeeConverter.toModel(ev),
+                    AttributeConst.FAV_FLAG_FALSE.getIntegerValue());
             createInternal(FavoriteConverter.toModel(favoriteView));
         }
     }
+
 
     private void createInternal(Favorite f) {
         em.getTransaction().begin();

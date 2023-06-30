@@ -9,6 +9,10 @@
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
 <c:set var="commDoFav" value="${ForwardConst.CMD_DO_FAVORITE.getValue()}" />
 <c:set var="commDelFav" value="${ForwardConst.CMD_DELETE_FAVORITE.getValue()}" />
+<c:set var="actFol" value="${ForwardConst.ACT_FOL.getValue()}" />
+<c:set var="commCrt" value="${ForwardConst.CMD_CREATE.getValue()}" />
+<c:set var="commDest" value="${ForwardConst.CMD_DESTROY.getValue()}" />
+
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
@@ -54,12 +58,27 @@
                 </tr>
             </tbody>
         </table>
-
-        <c:if test="${sessionScope.login_employee.id == report.employee.id}">
+         <c:choose>
+        <c:when test="${sessionScope.login_employee.id == report.employee.id}">
             <p>
                 <a href="<c:url value='?action=${actRep}&command=${commEdt}&id=${report.id}' />">この日報を編集する</a>
             </p>
-        </c:if>
+        </c:when>
+        <c:otherwise>
+            <c:if test="${isFollow == false}">
+                <form method="POST" action="<c:url value='?action=${actFol}&command=${commCrt}&id=${report.employee.id}' />">
+                <br />
+                <input type="submit" value="この作成者をフォローする">
+                </form>
+            </c:if>
+            <c:if test="${isFollow == true}">
+                 <form method="POST" action="<c:url value='?action=${actFol}&command=${commDest}&id=${report.employee.id}' />">
+                <br />
+                <input type="submit" value="この作成者をフォローを外す">
+                </form>
+            </c:if>
+        </c:otherwise>
+        </c:choose>
 
          <br>
         <c:choose>
